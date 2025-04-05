@@ -9,7 +9,7 @@ function App() {
   window.electron.getStaticData();
 
   useEffect(()=>{
-    //@ts-ignore
+    
     window.electron.subscribeStatistics((stats) => console.log(stats) );
   })
 

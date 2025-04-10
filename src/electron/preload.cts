@@ -9,7 +9,14 @@ electron.contextBridge.exposeInMainWorld('electron', {
             callback(stats);
         }),
 
+     subscribeChangeView: (callback) =>
+          ipcOn('changeView', (stats) => {
+            callback(stats);
+          }),
+
     getStaticData: () => ipcInvoke('getStaticData'),
+    
+    
     // getStaticData: () => console.log('satic')
 }satisfies Window["electron"]);
 

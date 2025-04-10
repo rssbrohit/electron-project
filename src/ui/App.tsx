@@ -7,10 +7,33 @@ function App() {
   const [count, setCount] = useState(0)
 
   const statistics = useStatistics(10); 
+  const [activeView, setActiveView] = useState<View>('CPU');
   const cpuUsages = useMemo(
     () => statistics.map((stat) => stat.cpuUsage),
     [statistics]
   );
+  const ramUsages = useMemo(
+    () => statistics.map((stat) => stat.ramUsage),
+    [statistics]
+  );
+  const storageUsages = useMemo(
+    () => statistics.map((stat) => stat.storageUsage),
+    [statistics]
+  );
+  const activeUsages = useMemo(() => {
+    switch (activeView) {
+      case 'CPU':
+        return cpuUsages;
+      case 'RAM':
+        return ramUsages;
+      case 'STORAGE':
+        return storageUsages;
+    }
+  }, [activeView, cpuUsages, ramUsages, storageUsages]);
+
+  useEffect(() => {
+    return window.electron.subscribeChangeView((view) => setActiveView(view));
+  }, []);
   // console.log(statistics); 
   
   //@ts-ignore
@@ -26,7 +49,7 @@ function App() {
   return (
     <>
     <div style={{height: 120}}>
-    <Chart data={cpuUsages} maxDataPoints={10} />
+    <Chart data={activeUsages} maxDataPoints={10} />
       {/* <BaseChart
           data={[{ value: 25 }, { value: 30 }, { value: 100 }]} fill= {'red'} stroke={'white'}     
        ></BaseChart> */}
